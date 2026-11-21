@@ -3938,7 +3938,7 @@ export function ChatRoom({ session, onBack, onDeleted, isActive = true }: ChatRo
         }
         const turn = beginTurn({
             kind: "user_reply",
-            characterId: character?.id ?? resolveSessionCharacterId(session) ?? "",
+            characterId: character?.id ?? resolveSessionCharacterId(session) ?? (session.isGroup ? "group:" + session.id : ""),
             sessionId: session.id,
         });
         if (!turn) return;
