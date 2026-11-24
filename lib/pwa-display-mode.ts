@@ -52,6 +52,10 @@ export function writePwaDisplayPreference(preference: PwaDisplayPreference) {
 /** Preserve the upstream default: mobile browsers request fullscreen unless Edge or explicitly disabled. */
 export function shouldRequestPwaFullscreen(): boolean {
   if (typeof document === "undefined" || typeof navigator === "undefined") return false;
+  // 安卓壳（FloatShell WebView）本身就是全屏：原生已隐藏系统状态栏，网页再请求
+  // Fullscreen 属于重复操作。老版本壳没有实现 onShowCustomView，请求必然失败，
+  // 于是每次冷启动后第一次点击都会弹出「浏览器没有允许网页进入全屏」的噪音提示。
+  if (navigator.userAgent.includes("FloatShell/")) return false;
   const preference = readPwaDisplayPreference(document.cookie);
   if (preference === "standalone") return false;
   if (preference === "fullscreen") return true;
